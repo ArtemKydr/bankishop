@@ -67,16 +67,17 @@ class SiteController extends Controller
     public function actionImages()
     {
         $model = new UploadImagesForm();
-        $count = 0;
-        $timestamp = date('Y_m_d_H_i_s');
+        $count = 0; //номер загружаемого документа
+        $timestamp = date('Y_m_d_H_i_s'); //временная метка для создания уникального имени.
         if (Yii::$app->request->isPost) {
             $model->imageFiles = UploadedFile::getInstances($model, 'imageFiles');
             if ($model->upload()) {
+                //перебираем все загруженные файлы и записываем инфу в бд
                 for ($i=0;$i<count($_FILES['UploadImagesForm']['name']['imageFiles']);$i++){
                     $images_model = new Images();
                     $file = pathinfo($_FILES['UploadImagesForm']['name']['imageFiles'][$i]);
                     $filename = UploadImagesForm::transliterate($file['filename']);
-                    $images_model->name = $filename.'_'.$timestamp.'_'.$count;
+                    $images_model->name = $filename.'_'.$timestamp.'_'.$count; //записываем в бд новое имя через транслитерацию, дату и время загрузки, а также порядковый номер док-а
                     $images_model->datetime = date('d.m.Y H:i:s');
                     $images_model->source = 'UploadImages/' . $filename.'_'.$timestamp.'_'.$count.'.'.$file['extension'];
                     $images_model->save(false);
