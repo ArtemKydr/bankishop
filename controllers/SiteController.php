@@ -83,6 +83,7 @@ class SiteController extends Controller
                     $count +=1;
                 }
                 Yii::$app->session->setFlash('success', 'Файл(ы) успешно загружены');
+                return $this->redirect(['images']);
             }else {
                 Yii::$app->session->setFlash('error', 'Не удалось загрузить файл(ы)');
             }
